@@ -8,26 +8,42 @@ on:
 
 jobs:
   laravel-tests:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
-      with:
-        php-version: '8.0'
+    # 1. BẮT BUỘC: Kéo mã nguồn từ GitHub về máy ảo trước tiên
     - uses: actions/checkout@v4
+
+    # 2. Cài đặt PHP 8.2 (Hỗ trợ tốt nhất cho Laravel 11)
+    - uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, bcmath, gd, zip
+        tools: composer:v2
+
+    # 3. Tạo file cấu hình môi trường (.env)
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+    # 4. Cài đặt thư viện (Bỏ qua lỗi xung đột môi trường máy ảo)
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
+
+    # 5. Tạo App Key cho Laravel
     - name: Generate key
       run: php artisan key:generate
+
+    # 6. Cấp quyền truy cập thư mục cho Laravel
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
+
+    # 7. Tạo Database giả lập (SQLite) để chạy Test siêu nhanh
     - name: Create Database
       run: |
         mkdir -p database
         touch database/database.sqlite
+
+    # 8. "Chốt chặn": Chạy Unit & Feature Test
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       env:
         DB_CONNECTION: sqlite
