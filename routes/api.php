@@ -8,5 +8,5 @@ Route::post('/tasks', function () {
 });
 
 Route::post('/customers', function () {
-    return response()->json(['message' => 'Error'], 500); 
+    return response()->json(['message' => 'Error'], 201); 
 });
