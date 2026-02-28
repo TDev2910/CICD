@@ -53,6 +53,7 @@ const submit = () => {
                     class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50">
                     {{ form.processing ? 'Đang xử lý...' : 'Đăng ký' }}
                 </button>
+                <a href="/login" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Đăng nhập</a>
             </form>
         </div>
     </div>
